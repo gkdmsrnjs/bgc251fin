@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ∨×××× [수정 금지] ××××∨ -->
+    <title></title>
+    <!-- ∧×××× [수정 금지] ××××∧ -->
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <link rel="stylesheet" href="./common/p5template/p5template.css" />
+
+    <script src="./common/p5template/responsive.js"></script>
+    <script src="./common/p5template/scroll.js"></script>
+    <script src="./common/p5template/title.js"></script>
+    <script src="./common/p5template/references.js"></script>
+    <script src="./common/p5template/paging.js"></script>
+    <script>
+      new P5Template.Scroll();
+
+      // ∨○○○○ [수정 필수] ○○○○∨
+      // 작품 제목, 본인 성명, 작품 공개 연도
+      new P5Template.Title('나는 내일 오늘의 나와 만난다.', '권하은', '2025');
+      // 참고자료 목록
+      const references = [
+        {
+          title: 'Crash Clock',
+          authors: ['Kiel danger mutschelknaus'],
+          year: '2024',
+          publisher: 'SpaceTypeGenerator',
+          url: 'https://spacetypegenerator.com/crashclock',
+        },
+        {
+          title:
+            'Interactive Gravity Falling Elements - Elementor & Matter JS Tutorial',
+          authors: ['Mayuresh Koli'],
+          year: '2024',
+          publisher: 'DMmotionarts - Youtube',
+          url: 'https://youtu.be/lvGTj5ANrHc?si=d_8ORcF3TevHz7jy',
+        },
+        {
+          title: 'I hate reading',
+          authors: ['André Burnier'],
+          year: '2024',
+          publisher: 'andreburnier',
+          url: 'https://www.instagram.com/p/C7_2HNDRr9j/?img_index=3&igsh=MWYwb2RmejU3YWRtNA%3D%3D',
+        },
+      ];
+      // ∧○○○○ [수정 필수] ○○○○∧
+
+      new P5Template.References(references);
+      new P5Template.Paging();
+    </script>
+
+    <!-- ∨○○○○ [수정 필수] ○○○○∨ -->
+    <!-- p5.js 라이브러리 로딩 -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.8/lib/p5.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.20.0/matter.min.js"
+      integrity="sha512-6+7rTBmR6pRFe9fa0vCFjFaHZj/XYa7774bEBzRtxgdpIJOS++R3cKd6Prg/eJmxtsJotd8KAg4g57uuVQsZKA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+    <script src="sketch.js" defer></script>
+    <!-- 본인 스케치 로딩 -->
+    <script src="./sketches/sketch.js" defer></script>
+    <!-- ∧○○○○ [수정 필수] ○○○○∧ -->
+  </head>
+  <body>
+    <main id="main">
+      <!-- ∨○○○○ [수정 필수] ○○○○∨ -->
+      <!-- 전체화면 여부 선택 -->
+      <section
+        id="section-canvas"
+        class="section section--canvas canvas"
+        data-full-width="false"
+      >
+        <!-- ∧○○○○ [수정 필수] ○○○○∧ -->
+        <div class="container canvas__container">
+          <div id="canvas-container"></div>
+        </div>
+      </section>
+      <section id="section-control" class="section section--control control">
+        <div class="container control__container control__container">
+          <div class="control__label">
+            <div class="control__label__title title"></div>
+            <div class="control__label__author author"></div>
+          </div>
+          <div class="control__paging">
+            <button
+              id="button-prev"
+              class="icon-button control__button control__button--prev"
+              data-icon="arrow_back_ios_new"
+              aria-label="to previous"
+            ></button>
+            <button
+              id="button-next"
+              class="icon-button control__button control__button--next"
+              data-icon="arrow_forward_ios"
+              aria-label="to next"
+            ></button>
+            <button
+              id="button-list"
+              class="icon-button control__button control__button--list"
+              data-icon="grid_view"
+              aria-label="to list"
+            ></button>
+          </div>
+          <div class="control__scroll">
+            <button
+              id="button-scroll"
+              class="icon-button control__button control__button--scroll"
+              data-icon="arrow_drop_down"
+              aria-label="toggle description"
+              data-toward="down"
+            ></button>
+          </div>
+        </div>
+      </section>
+      <section
+        id="section-information"
+        class="section section--information information"
+      >
+        <div class="container information__container">
+          <div class="information__label">
+            <h1 class="information__label__title title"></h1>
+            <h2 class="information__label__author author"></h2>
+          </div>
+          <div class="information__description">
+            <!-- ∨○○○○ [수정 필수] ○○○○∨ -->
+            <!-- 작품 설명 -->
+            <p>
+              <나는 내일 오늘의 나와 만난다.>는 시간과 미루기의 아이러니를
+              유쾌하게 풀어낸 인터랙티브 작품이다. 작품의 중심부에는 시계가
+              자리하고 있으며, 시계의 숫자들은 무너져 내리듯 흩어지며, 시간의
+              소중함과 덧없음을 시각적으로 드러낸다.
+            </p>
+            <p>
+              시계 옆에는 한 장의 메모지가 놓여 있다. 사용자가 메모지를 클릭하면
+              할 일 목록이 펼쳐지는데, 그 안에는 끝없이 반복되는 “과제”라는
+              단어만이 적혀 있다. 그리고 “절대 클릭하지 말 것”이라는 문구는
+              회피와 미루기의 심리를 상징적으로 표현한다. 이 반복과 금기는
+              디자인 학부생이 매일 마주하는 과제의 압박과, 이를 내일로 미루는
+              익숙한 자기합리화를 재치 있게 풍자한다.
+            </p>
+            <p>
+              작품은 흐르는 시간과 쌓여가는 할 일을 맞바꾸며, 오늘의 나는 또다시
+              내일의 나에게 모든 것을 맡기는 현대인의 일상적 딜레마를
+              담담하면서도 유머러스하게 그려낸다. 관객은 시계와 메모지 사이에서
+              시간의 흐름과 미루기의 유혹을 직접 경험하며, 자신만의 ‘내일의
+              나’를 떠올리게 된다. 이 작품은 반복과 무너짐, 그리고 유쾌한
+              자기반성을 통해, 바쁜 일상 속 우리 모두의 모습을 비추는 거울이자,
+              동시대의 작은 자화상이다.
+            </p>
+            <!-- ∧○○○○ [수정 필수] ○○○○∧ -->
+          </div>
+          <div class="information__reference">
+            <div class="information__reference__wrap">
+              <div class="information__reference__title">참고자료</div>
+              <ol></ol>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
