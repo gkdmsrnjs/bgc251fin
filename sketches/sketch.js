@@ -9,6 +9,10 @@ let mouseConstraint;
 
 let dragging = false;
 let revealCount = 0;
+let clickedOnMemo = false;
+
+let RED_HAND_COLOR;
+
 let textPool = [
   '< TODO LIST >',
   '1. 과제',
@@ -19,9 +23,20 @@ let textPool = [
   'ㅠㅠ',
 ];
 
+function isSameColor(c1, c2) {
+  return (
+    red(c1) === red(c2) &&
+    green(c1) === green(c2) &&
+    blue(c1) === blue(c2) &&
+    alpha(c1) === alpha(c2)
+  );
+}
+
 function setup() {
   new Responsive().createResponsiveCanvas(1440, 600, 'contain', true);
   textAlign(CENTER, CENTER);
+
+  RED_HAND_COLOR = color(200, 50, 50);
 
   engine = Matter.Engine.create();
   world = engine.world;
@@ -40,7 +55,7 @@ function setup() {
 
   hourHand = createHand(120, 10, 'black');
   minuteHand = createHand(200, 6, 'black');
-  secondHand = createHand(300, 2, 'red');
+  secondHand = createHand(300, 2, RED_HAND_COLOR);
   Matter.World.add(world, [hourHand, minuteHand, secondHand]);
 
   const centerDot = Matter.Bodies.circle(centerX, centerY, 5, {
@@ -103,7 +118,12 @@ function setup() {
 }
 
 function draw() {
-  background(255);
+  originalDraw();
+  drawMousePointer();
+}
+
+function originalDraw() {
+  background(248, 248, 248);
   drawMemo();
 
   textFont('Helvetica');
@@ -117,14 +137,13 @@ function draw() {
 
   drawHand(hourHand, 120, 10, 'black');
   drawHand(minuteHand, 200, 6, 'black');
-  drawHand(secondHand, 300, 2, 'red');
-
+  drawHand(secondHand, 300, 2, RED_HAND_COLOR);
   updateClockHands();
 
   fill('black');
   noStroke();
   circle(width / 2 - 200, height / 2, 24);
-  fill('red');
+  fill(RED_HAND_COLOR);
   circle(width / 2 - 200, height / 2, 16);
 
   Matter.Engine.update(engine);
@@ -142,7 +161,7 @@ function drawHand(hand, length, thickness, color) {
   noStroke();
   rectMode(CORNER);
 
-  if (color === 'red') {
+  if (isSameColor(color, RED_HAND_COLOR)) {
     rect(-30, -thickness / 2, length, thickness, thickness / 2);
   } else {
     rect(0, -thickness / 2, length, thickness, thickness / 2);
@@ -189,7 +208,7 @@ function drawMemo() {
   strokeWeight(2);
   rect(memoX, memoY, memoW, memoH, 10);
 
-  fill(200, 50, 50);
+  fill(RED_HAND_COLOR);
   textSize(16);
   textAlign(CENTER, TOP);
   textFont('gothic');
@@ -221,75 +240,17 @@ function drawMemo() {
   }
 }
 
-function mousePressed() {
-  let memoX = width - 400;
-  let memoY = 80;
-  let memoW = 300;
-  let memoH = 400;
-
-  if (
-    mouseX >= memoX &&
-    mouseX <= memoX + memoW &&
-    mouseY >= memoY &&
-    mouseY <= memoY + memoH
-  ) {
-    dragging = true;
-    revealCount = textPool.length;
-  }
-}
-
-function mouseReleased() {
-  dragging = false;
-  revealCount = 0;
-}
-let clickedOnMemo = false;
-
-function draw() {
-  // 기존 draw 유지
-  originalDraw();
-
-  drawMousePointer();
-}
-
-// 기존 draw 함수 백업 → 실제 내용 복사 없이 래핑
-function originalDraw() {
-  background(255);
-  drawMemo();
-
-  textFont('Helvetica');
-  fill(0);
-  noStroke();
-  textStyle(BOLD);
-  textSize(120);
-  bigNumbers.forEach((b) => {
-    text(b.customLabel, b.position.x, b.position.y);
-  });
-
-  drawHand(hourHand, 120, 10, 'black');
-  drawHand(minuteHand, 200, 6, 'black');
-  drawHand(secondHand, 300, 2, color(200, 50, 50));
-  updateClockHands();
-
-  fill('black');
-  noStroke();
-  circle(width / 2 - 200, height / 2, 24);
-  fill(200, 50, 50);
-  circle(width / 2 - 200, height / 2, 16);
-
-  Matter.Engine.update(engine);
-}
-
 function drawMousePointer() {
   noStroke();
   textAlign(CENTER, CENTER);
   textSize(20);
-  noCursor(); // 시스템 커서 숨김
+  noCursor();
 
   if (clickedOnMemo) {
     textSize(50);
     text('😢', mouseX, mouseY);
   } else {
-    fill(200, 50, 50);
+    fill(RED_HAND_COLOR);
     circle(mouseX, mouseY, 30);
   }
 }
@@ -308,12 +269,12 @@ function mousePressed() {
   ) {
     dragging = true;
     revealCount = textPool.length;
-    clickedOnMemo = true; // 슬픈 이모티콘 상태
+    clickedOnMemo = true;
   }
 }
 
 function mouseReleased() {
   dragging = false;
   revealCount = 0;
-  clickedOnMemo = false; // 다시 원형 포인터로
+  clickedOnMemo = false;
 }
